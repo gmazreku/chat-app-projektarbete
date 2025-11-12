@@ -1,9 +1,6 @@
 package se.sprinto.hakan.chatapp;
 
-import se.sprinto.hakan.chatapp.dao.MessageDAO;
-import se.sprinto.hakan.chatapp.dao.MessageListDAO;
-import se.sprinto.hakan.chatapp.dao.UserDAO;
-import se.sprinto.hakan.chatapp.dao.UserListDAO;
+import se.sprinto.hakan.chatapp.dao.*;
 import se.sprinto.hakan.chatapp.model.Message;
 import se.sprinto.hakan.chatapp.model.User;
 
@@ -12,6 +9,7 @@ import java.io.IOException;
 import java.io.InputStreamReader;
 import java.io.PrintWriter;
 import java.net.Socket;
+import java.time.format.DateTimeFormatter;
 import java.util.List;
 
 public class ClientHandler implements Runnable {
@@ -21,8 +19,8 @@ public class ClientHandler implements Runnable {
     private PrintWriter out;
     private User user;
 
-    private final UserDAO userDAO = new UserListDAO();
-    private final MessageDAO messageDAO = new MessageListDAO();
+    private final UserDAO userDAO = new UserDatabaseDAO();
+    private final MessageDAO messageDAO = new MessageDatabaseDAO();
 
     ClientHandler(Socket socket, ChatServer server) {
         this.socket = socket;
@@ -85,8 +83,9 @@ public class ClientHandler implements Runnable {
                         out.println("Inga sparade meddelanden.");
                     } else {
                         out.println("Dina meddelanden:");
-                        for (Message m : messages) {
-                            out.println("[" + m.getTimestamp() + "] " + m.getText());
+                        for (Message m : messages) { // La till en datetimeformatter för att det ska se bättre ut ;P
+                            DateTimeFormatter dateFormat = DateTimeFormatter.ofPattern("yyyy-MM-dd | HH:mm:ss");
+                            out.println("[" + m.getTimestamp().format(dateFormat) + "] " + m.getText());
                         }
                     }
                 } else {
