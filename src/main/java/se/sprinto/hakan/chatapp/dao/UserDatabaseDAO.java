@@ -11,7 +11,7 @@ public class UserDatabaseDAO implements UserDAO{
         String sql = "SELECT u.id, u.username, u.password, m.id AS message_id, m.message, m.timestamp, m.user_id " +
                      "FROM users u " +
                      "LEFT JOIN messages m ON u.id = m.user_id " +
-                     "WHERE u.username = ?";
+                     "WHERE u.username =? AND u.password=?";
 
         User user = null;
 
